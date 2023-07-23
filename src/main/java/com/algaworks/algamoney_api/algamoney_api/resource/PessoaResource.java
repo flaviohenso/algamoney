@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algamoney_api.algamoney_api.dto.PessoaDto;
@@ -77,11 +79,11 @@ public class PessoaResource {
      * @param id
      */
     @DeleteMapping(path = "/remover/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id, HttpServletResponse response) {
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long id, HttpServletResponse response) {
         pessoaService.remover(id);
 
         publisher.publishEvent(new RecursoRemovidoEvent(this, response));
-        return ResponseEntity.noContent().build();
     }
 
     /**
