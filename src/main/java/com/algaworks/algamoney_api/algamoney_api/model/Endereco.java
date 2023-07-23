@@ -1,6 +1,7 @@
 package com.algaworks.algamoney_api.algamoney_api.model;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 
 /*
  * Classe para representar um endereço
@@ -8,18 +9,24 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Endereco {
 
+    @NotBlank
     private String logradouro;
 
+    @NotBlank
     private String numero;
 
     private String complemento;
 
+    @NotBlank
     private String bairro;
 
+    @NotBlank
     private String cep;
 
+    @NotBlank
     private String cidade;
 
+    @NotBlank
     private String estado;
 
     public Endereco() {

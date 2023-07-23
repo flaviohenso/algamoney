@@ -1,12 +1,12 @@
 package com.algaworks.algamoney_api.algamoney_api.dto;
 
+import com.algaworks.algamoney_api.algamoney_api.model.Categoria;
 import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.algaworks.algamoney_api.algamoney_api.model.Categoria;
+
 
 public class CategoriaDto {
 

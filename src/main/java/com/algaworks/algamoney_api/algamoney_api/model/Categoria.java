@@ -22,9 +22,9 @@ public class Categoria {
     }
 
     /**
-     * @param codigo Long
-     * @param nome String
-     * @param descricao  String
+     * @param codigo    Long
+     * @param nome      String
+     * @param descricao String
      */
     public Categoria(Long codigo, String nome, String descricao) {
         this.codigo = codigo;
@@ -91,7 +91,7 @@ public class Categoria {
         private String nome;
         private String descricao;
 
-        public Builder(){
+        public Builder() {
         }
 
         /**

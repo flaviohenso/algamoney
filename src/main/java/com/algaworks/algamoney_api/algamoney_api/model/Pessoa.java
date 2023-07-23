@@ -9,156 +9,187 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.algaworks.algamoney_api.algamoney_api.dto.PessoaDto;
+
 @Entity
 @Table(name = "pessoa")
 public class Pessoa {
 
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY) // gera o id automaticamente
-private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // gera o id automaticamente
+    private Long id;
 
-@NotBlank
-private String nome;
+    @NotBlank
+    private String nome;
 
-@Column(unique = true)
-private String cpf;
+    @Column(unique = true)
+    private String cpf;
 
-private String email;
+    private String email;
 
-private String telefone;
+    private String telefone;
 
-private Boolean ativo;
+    private Boolean ativo;
 
-@Embedded
-private Endereco endereco;
+    @Embedded
+    private Endereco endereco;
 
-public Pessoa() {
-}
+    public Pessoa() {
+    }
 
-/**
- * getter e setter
- */
+    /*
+     * Construtor para o builder
+     */
+    private Pessoa(Builder builder) {
+        this.id = builder.id;
+        this.nome = builder.nome;
+        this.cpf = builder.cpf;
+        this.email = builder.email;
+        this.telefone = builder.telefone;
+        this.ativo = builder.ativo;
+        this.endereco = builder.endereco;
+    }
 
- public String getCpf() {
-    return cpf;
-}
+    /**
+     * getter e setter
+     */
 
-public void setCpf(String cpf) {
-    this.cpf = cpf;
-}
+    public String getCpf() {
+        return cpf;
+    }
 
-public Boolean getAtivo() {
-    return ativo;
-}
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
-public String getEmail() {
-    return email;
-}
+    public Boolean getAtivo() {
+        return ativo;
+    }
 
-public Endereco getEndereco() {
-    return endereco;
-}
+    public String getEmail() {
+        return email;
+    }
 
-public Long getId() {
-    return id;
-}
+    public Endereco getEndereco() {
+        return endereco;
+    }
 
-public String getNome() {
-    return nome;
-}
+    public Long getId() {
+        return id;
+    }
 
-public String getTelefone() {
-    return telefone;
-}
+    public String getNome() {
+        return nome;
+    }
 
-public void setAtivo(Boolean ativo) {
-    this.ativo = ativo;
-}
+    public String getTelefone() {
+        return telefone;
+    }
 
-public void setEmail(String email) {
-    this.email = email;
-}
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 
-public void setEndereco(Endereco endereco) {
-    this.endereco = endereco;
-}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-public void setId(Long id) {
-    this.id = id;
-}
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
 
-public void setNome(String nome) {
-    this.nome = nome;
-}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-public void setTelefone(String telefone) {
-    this.telefone = telefone;
-}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-@Override
-public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-    result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
-    result = prime * result + ((email == null) ? 0 : email.hashCode());
-    result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
-    result = prime * result + ((ativo == null) ? 0 : ativo.hashCode());
-    result = prime * result + ((endereco == null) ? 0 : endereco.hashCode());
-    return result;
-}
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 
-@Override
-public boolean equals(Object obj) {
-    if (this == obj)
+    /**
+     * Método para converter um objeto Pessoa para um objeto PessoaDto
+     *
+     * @param pessoa
+     * @return
+     */
+    public PessoaDto toPessoaDto(Pessoa pessoa) {
+        return new PessoaDto.Builder()
+                .nome(pessoa.getNome())
+                .cpf(pessoa.getCpf())
+                .email(pessoa.getEmail())
+                .withTelefone(pessoa.getTelefone())
+                .withAtivo(pessoa.getAtivo())
+                .endereco(pessoa.getEndereco())
+                .build();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+        result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
+        result = prime * result + ((ativo == null) ? 0 : ativo.hashCode());
+        result = prime * result + ((endereco == null) ? 0 : endereco.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Pessoa other = (Pessoa) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (nome == null) {
+            if (other.nome != null)
+                return false;
+        } else if (!nome.equals(other.nome))
+            return false;
+        if (cpf == null) {
+            if (other.cpf != null)
+                return false;
+        } else if (!cpf.equals(other.cpf))
+            return false;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
+            return false;
+        if (telefone == null) {
+            if (other.telefone != null)
+                return false;
+        } else if (!telefone.equals(other.telefone))
+            return false;
+        if (ativo == null) {
+            if (other.ativo != null)
+                return false;
+        } else if (!ativo.equals(other.ativo))
+            return false;
+        if (endereco == null) {
+            if (other.endereco != null)
+                return false;
+        } else if (!endereco.equals(other.endereco))
+            return false;
         return true;
-    if (obj == null)
-        return false;
-    if (getClass() != obj.getClass())
-        return false;
-    Pessoa other = (Pessoa) obj;
-    if (id == null) {
-        if (other.id != null)
-            return false;
-    } else if (!id.equals(other.id))
-        return false;
-    if (nome == null) {
-        if (other.nome != null)
-            return false;
-    } else if (!nome.equals(other.nome))
-        return false;
-    if (cpf == null) {
-        if (other.cpf != null)
-            return false;
-    } else if (!cpf.equals(other.cpf))
-        return false;
-    if (email == null) {
-        if (other.email != null)
-            return false;
-    } else if (!email.equals(other.email))
-        return false;
-    if (telefone == null) {
-        if (other.telefone != null)
-            return false;
-    } else if (!telefone.equals(other.telefone))
-        return false;
-    if (ativo == null) {
-        if (other.ativo != null)
-            return false;
-    } else if (!ativo.equals(other.ativo))
-        return false;
-    if (endereco == null) {
-        if (other.endereco != null)
-            return false;
-    } else if (!endereco.equals(other.endereco))
-        return false;
-    return true;
-}
+    }
 
-
-/* Builder */
-public static final class PessoaBuilder {
+    /* Builder */
+    public static final class Builder {
         private Long id;
         private String nome;
         private String cpf;
@@ -167,44 +198,44 @@ public static final class PessoaBuilder {
         private Boolean ativo;
         private Endereco endereco;
 
-        private PessoaBuilder() {
+        public Builder() {
         }
 
-        public static PessoaBuilder aPessoa() {
-            return new PessoaBuilder();
+        public static Builder aPessoa() {
+            return new Builder();
         }
 
-        public PessoaBuilder withId(Long id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public PessoaBuilder withNome(String nome) {
+        public Builder nome(String nome) {
             this.nome = nome;
             return this;
         }
 
-        public PessoaBuilder withCpf(String cpf) {
+        public Builder cpf(String cpf) {
             this.cpf = cpf;
             return this;
         }
 
-        public PessoaBuilder withEmail(String email) {
+        public Builder email(String email) {
             this.email = email;
             return this;
         }
 
-        public PessoaBuilder withTelefone(String telefone) {
+        public Builder withTelefone(String telefone) {
             this.telefone = telefone;
             return this;
         }
 
-        public PessoaBuilder withAtivo(Boolean ativo) {
+        public Builder withAtivo(Boolean ativo) {
             this.ativo = ativo;
             return this;
         }
 
-        public PessoaBuilder withEndereco(Endereco endereco) {
+        public Builder endereco(Endereco endereco) {
             this.endereco = endereco;
             return this;
         }

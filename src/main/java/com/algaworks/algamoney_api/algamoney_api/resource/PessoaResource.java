@@ -1,11 +1,11 @@
 package com.algaworks.algamoney_api.algamoney_api.resource;
 
-import com.algaworks.algamoney_api.algamoney_api.dto.PessoaUpdateDto;
-import com.algaworks.algamoney_api.algamoney_api.model.Pessoa;
-import com.algaworks.algamoney_api.algamoney_api.service.PessoaService;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
+import com.algaworks.algamoney_api.algamoney_api.dto.PessoaDto;
+import com.algaworks.algamoney_api.algamoney_api.dto.PessoaUpdateDto;
+import com.algaworks.algamoney_api.algamoney_api.evento.RecursoCriadoEvent;
+import com.algaworks.algamoney_api.algamoney_api.evento.RecursoRemovidoEvent;
+import com.algaworks.algamoney_api.algamoney_api.model.Pessoa;
+import com.algaworks.algamoney_api.algamoney_api.service.PessoaService;
 
 /*
  * Controller para a entidade Pessoa
@@ -28,9 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PessoaResource {
 
     private PessoaService pessoaService;
+    private ApplicationEventPublisher publisher;
 
-    public PessoaResource(PessoaService pessoaService) {
+    public PessoaResource(PessoaService pessoaService, ApplicationEventPublisher publisher) {
         this.pessoaService = pessoaService;
+        this.publisher = publisher;
     }
 
     /**
@@ -51,18 +57,18 @@ public class PessoaResource {
      * @return
      */
     @PutMapping(path = "/atualizar/{id}")
-    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @Valid @RequestBody PessoaUpdateDto pessoa) {
-        Pessoa pessoaSalva = pessoaService.atualizar(id, pessoa);
-        return ResponseEntity.ok(pessoaSalva);
+    public ResponseEntity<PessoaDto> atualizar(@PathVariable Long id, @Valid @RequestBody PessoaUpdateDto pessoa) {
+        PessoaDto pessoaDto = new Pessoa().toPessoaDto(pessoaService.atualizar(id, pessoa));
+        return ResponseEntity.ok(pessoaDto);
     }
 
     /**
      * End point para buscar uma pessoa pelo id
      */
     @GetMapping(path = "/listar/{id}")
-    public ResponseEntity<Pessoa> buscarPeloId(@PathVariable Long id) {
-        Pessoa pessoa = pessoaService.buscarPeloId(id);
-        return ResponseEntity.ok(pessoa);
+    public ResponseEntity<PessoaDto> buscarPeloId(@PathVariable Long id) {
+        PessoaDto pessoaDto = new Pessoa().toPessoaDto(pessoaService.buscarPeloId(id));
+        return ResponseEntity.ok(pessoaDto);
     }
 
     /**
@@ -71,8 +77,10 @@ public class PessoaResource {
      * @param id
      */
     @DeleteMapping(path = "/remover/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
+    public ResponseEntity<Void> remover(@PathVariable Long id, HttpServletResponse response) {
         pessoaService.remover(id);
+
+        publisher.publishEvent(new RecursoRemovidoEvent(this, response));
         return ResponseEntity.noContent().build();
     }
 
@@ -80,11 +88,15 @@ public class PessoaResource {
      * End point para criar uma pessoa
      */
     @PostMapping(path = "/criar")
-    public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa) {
-
+    public PessoaDto criar(@Valid @RequestBody PessoaDto pessoaDto, HttpServletResponse response) {
+        Pessoa pessoa = pessoaDto.toPessoa(pessoaDto);
         pessoaService.validarPessoaInsert(pessoa);
         Pessoa pessoaSalva = pessoaService.criar(pessoa);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
+
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getId()));
+
+        return pessoaDto;
+
     }
 
 }
