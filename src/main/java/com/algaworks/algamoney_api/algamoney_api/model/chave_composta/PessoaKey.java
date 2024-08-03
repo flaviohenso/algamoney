@@ -2,9 +2,9 @@ package com.algaworks.algamoney_api.algamoney_api.model.chave_composta;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 /**
  * Classe que representa a chave composta da enteidade Pessoa

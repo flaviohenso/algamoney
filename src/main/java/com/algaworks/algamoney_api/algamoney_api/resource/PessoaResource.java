@@ -2,7 +2,6 @@ package com.algaworks.algamoney_api.algamoney_api.resource;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -22,6 +21,8 @@ import com.algaworks.algamoney_api.algamoney_api.evento.RecursoCriadoEvent;
 import com.algaworks.algamoney_api.algamoney_api.evento.RecursoRemovidoEvent;
 import com.algaworks.algamoney_api.algamoney_api.model.Pessoa;
 import com.algaworks.algamoney_api.algamoney_api.service.PessoaService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 /*
  * Controller para a entidade Pessoa
