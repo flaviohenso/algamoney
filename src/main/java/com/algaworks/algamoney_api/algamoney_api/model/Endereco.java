@@ -1,7 +1,8 @@
 package com.algaworks.algamoney_api.algamoney_api.model;
 
-import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
+
+import jakarta.persistence.Embeddable;
 
 /*
  * Classe para representar um endereço

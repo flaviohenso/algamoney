@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.tomcat.util.file.ConfigurationSource.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -32,8 +31,7 @@ public class AlgamoneyExeceptionHandler extends ResponseEntityExceptionHandler{
     /*
      * Método para tratar a execão de atributo no body request que não existe na classe modelo
      */
-     @Override
-    public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         String mensagemDesenvolvedor = ex.toString();
@@ -80,8 +78,7 @@ public class AlgamoneyExeceptionHandler extends ResponseEntityExceptionHandler{
     /*
      * Metodo para tratar quando ocorrer erro de validaçao de atributos
      */
-     @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         List<Erro> erros = criarListaDeErros(ex.getBindingResult());

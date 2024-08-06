@@ -2,8 +2,6 @@ package com.algaworks.algamoney_api.algamoney_api.evento.listener;
 
 import java.net.URI;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -11,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.algaworks.algamoney_api.algamoney_api.evento.RecursoRemovidoEvent;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class RecursoRemovidoListener implements ApplicationListener<RecursoRemovidoEvent> {
