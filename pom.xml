@@ -95,9 +95,32 @@
 			<artifactId>springdoc-openapi-security</artifactId>
 			<version>1.8.0</version>
 		</dependency>
-		
-	</dependencies>
 
+		<dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-dependencies</artifactId>
+			<version>5.14.0</version>
+			<type>pom</type>
+			<scope>import</scope>
+		  </dependency>
+
+		  <dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-starter-keyvault</artifactId>
+		  </dependency>
+
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+		  <dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-dependencies</artifactId>
+			<version>5.14.0</version>
+			<type>pom</type>
+			<scope>import</scope>
+		  </dependency>
+		</dependencies>
+	  </dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -107,4 +130,10 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>azure-spring</id>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
 </project>
