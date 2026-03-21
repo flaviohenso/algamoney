@@ -1,6 +1,6 @@
 package com.algaworks.algamoney_api.algamoney_api.dto;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 public class PessoaUpdateDto {
 

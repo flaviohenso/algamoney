@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Refatoração - Algamoney API</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .container { background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; }
+        h3 { color: #16a085; }
+        .skill-badge { background: #e67e22; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; display: inline-block; margin-bottom: 20px; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        .code-block { background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; margin: 20px 0; }
+        .footer { margin-top: 50px; font-size: 0.8em; color: #7f8c8d; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+        .check-icon { color: #27ae60; font-weight: bold; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Relatório de Engenharia e Refatoração</h1>
+        <p><strong>Projeto:</strong> algamoney-api</p>
+        <div class="skill-badge">Skill Utilizada: java-design-patterns-reviewer</div>
+
+        <h2>1. Análise e Diagnóstico</h2>
+        <p>O projeto apresentava débitos técnicos críticos que impediam a evolução e a manutenção:</p>
+        <ul>
+            <li>Incompatibilidade de bibliotecas (Java EE vs Jakarta EE).</li>
+            <li>Alto acoplamento entre camadas (Entidades dependentes de DTOs).</li>
+            <li>Lógica de negócio dispersa na camada de serviço.</li>
+            <li>Testes unitários quebrados ou mal configurados.</li>
+        </ul>
+
+        <h2>2. Ações de Correção Crítica</h2>
+        <p>Antes da refatoração, o sistema foi estabilizado:</p>
+        <ul>
+            <li><span class="check-icon">✔</span> Migração completa para <strong>Jakarta Persistence e Validation</strong>.</li>
+            <li><span class="check-icon">✔</span> Limpeza e ajuste do <strong>pom.xml</strong> para Spring Boot 3.3.2.</li>
+            <li><span class="check-icon">✔</span> Correção dos testes unitários utilizando <strong>JUnit 5 e Mockito</strong>.</li>
+        </ul>
+
+        <h2>3. Refatoração Arquitetural (Execução)</h2>
+        <h3>Padrão Mapper</h3>
+        <p>Implementação de <code>PessoaMapper</code> e <code>CategoriaMapper</code>. Centralizamos a conversão de tipos, permitindo que as entidades de banco de dados permaneçam isoladas da camada de apresentação.</p>
+        
+        <h3>Generalização do Observer (Eventos)</h3>
+        <p>Refatoramos o <code>RecursoCriadoEvent</code> para suportar caminhos dinâmicos. Isso permitiu que o <code>CategoriaResource</code> passasse a usar o sistema de eventos de forma padronizada, eliminando código duplicado.</p>
+
+        <h3>Encapsulamento de Domínio</h3>
+        <p>A lógica de atualização foi movida para o modelo <code>Pessoa</code>. Exemplo da nova implementação:</p>
+        <div class="code-block">
+            public void atualizarDados(Pessoa novosDados) {<br>
+            &nbsp;&nbsp;if (novosDados.getAtivo() != null) this.setAtivo(novosDados.getAtivo());<br>
+            &nbsp;&nbsp;// ... demais campos encapsulados<br>
+            }
+        </div>
+
+        <h2>4. Conclusão</h2>
+        <p>A refatoração resultou em uma arquitetura mais limpa (Clean Architecture), facilitando testes unitários e futuras expansões do sistema sem a necessidade de modificar componentes core (OCP).</p>
+
+        <div class="footer">
+            Relatório gerado automaticamente por Gemini CLI em 21 de Março de 2026.
+        </div>
+    </div>
+</body>
+</html>

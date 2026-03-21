@@ -1,7 +1,7 @@
 package com.algaworks.algamoney_api.algamoney_api.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import com.algaworks.algamoney_api.algamoney_api.model.Endereco;
 import com.algaworks.algamoney_api.algamoney_api.model.Pessoa;
@@ -96,23 +96,6 @@ public class PessoaDto {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
-    }
-
-    /**
-     * Método para converter um objeto PessoaDto para um objeto Pessoa
-     *
-     * @param pessoaDto
-     * @return
-     */
-    public Pessoa toPessoa(PessoaDto pessoaDto) {
-        return new Pessoa.Builder()
-                .nome(pessoaDto.getNome())
-                .cpf(pessoaDto.getCpf())
-                .email(pessoaDto.getEmail())
-                .withTelefone(pessoaDto.getTelefone())
-                .withAtivo(pessoaDto.getAtivo())
-                .endereco(pessoaDto.getEndereco())
-                .build();
     }
 
     /*

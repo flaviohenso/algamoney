@@ -2,7 +2,7 @@ package com.algaworks.algamoney_api.algamoney_api.resource;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -21,6 +21,7 @@ import com.algaworks.algamoney_api.algamoney_api.dto.PessoaDto;
 import com.algaworks.algamoney_api.algamoney_api.dto.PessoaUpdateDto;
 import com.algaworks.algamoney_api.algamoney_api.evento.RecursoCriadoEvent;
 import com.algaworks.algamoney_api.algamoney_api.evento.RecursoRemovidoEvent;
+import com.algaworks.algamoney_api.algamoney_api.mapper.PessoaMapper;
 import com.algaworks.algamoney_api.algamoney_api.model.Pessoa;
 import com.algaworks.algamoney_api.algamoney_api.service.PessoaService;
 
@@ -36,10 +37,12 @@ public class PessoaResource {
 
     private PessoaService pessoaService;
     private ApplicationEventPublisher publisher;
+    private PessoaMapper pessoaMapper;
 
-    public PessoaResource(PessoaService pessoaService, ApplicationEventPublisher publisher) {
+    public PessoaResource(PessoaService pessoaService, ApplicationEventPublisher publisher, PessoaMapper pessoaMapper) {
         this.pessoaService = pessoaService;
         this.publisher = publisher;
+        this.pessoaMapper = pessoaMapper;
     }
 
     /**
@@ -48,8 +51,8 @@ public class PessoaResource {
      * @return lista de pessoas
      */
     @GetMapping(path = "/listar")
-    public List<Pessoa> listar() {
-        return pessoaService.listar();
+    public List<PessoaDto> listar() {
+        return pessoaMapper.toDtoList(pessoaService.listar());
     }
 
     /**
@@ -61,7 +64,7 @@ public class PessoaResource {
      */
     @PutMapping(path = "/atualizar/{id}")
     public ResponseEntity<PessoaDto> atualizar(@PathVariable Long id, @Valid @RequestBody PessoaUpdateDto pessoa) {
-        PessoaDto pessoaDto = new Pessoa().toPessoaDto(pessoaService.atualizar(id, pessoa));
+        PessoaDto pessoaDto = pessoaMapper.toDto(pessoaService.atualizar(id, pessoa));
         return ResponseEntity.ok(pessoaDto);
     }
 
@@ -70,7 +73,7 @@ public class PessoaResource {
      */
     @GetMapping(path = "/listar/{id}")
     public ResponseEntity<PessoaDto> buscarPeloId(@PathVariable Long id) {
-        PessoaDto pessoaDto = new Pessoa().toPessoaDto(pessoaService.buscarPeloId(id));
+        PessoaDto pessoaDto = pessoaMapper.toDto(pessoaService.buscarPeloId(id));
         return ResponseEntity.ok(pessoaDto);
     }
 
@@ -92,11 +95,11 @@ public class PessoaResource {
      */
     @PostMapping(path = "/criar")
     public PessoaDto criar(@Valid @RequestBody PessoaDto pessoaDto, HttpServletResponse response) {
-        Pessoa pessoa = pessoaDto.toPessoa(pessoaDto);
+        Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
         pessoaService.validarPessoaInsert(pessoa);
         Pessoa pessoaSalva = pessoaService.criar(pessoa);
 
-        publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getId()));
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getId(), "/pessoa/listar/"));
 
         return pessoaDto;
 

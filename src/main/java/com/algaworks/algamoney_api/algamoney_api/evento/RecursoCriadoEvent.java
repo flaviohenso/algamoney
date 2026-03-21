@@ -10,11 +10,13 @@ public class RecursoCriadoEvent extends ApplicationEvent {
 
     private HttpServletResponse response;
     private Long codigo;
+    private String path;
 
-    public RecursoCriadoEvent(Object source, HttpServletResponse response, Long codigo) {
+    public RecursoCriadoEvent(Object source, HttpServletResponse response, Long codigo, String path) {
         super(source);
         this.response = response;
         this.codigo = codigo;
+        this.path = path;
     }
 
     /**
@@ -30,6 +32,13 @@ public class RecursoCriadoEvent extends ApplicationEvent {
      */
     public Long getCodigo() {
         return codigo;
+    }
+
+    /**
+     * @return the path
+     */
+    public String getPath() {
+        return path;
     }
 
 }

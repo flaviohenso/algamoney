@@ -1,6 +1,6 @@
 package com.algaworks.algamoney_api.algamoney_api.model;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import jakarta.persistence.Embeddable;
 
