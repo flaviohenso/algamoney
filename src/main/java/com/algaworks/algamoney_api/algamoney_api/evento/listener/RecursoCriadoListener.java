@@ -25,8 +25,9 @@ public class RecursoCriadoListener implements ApplicationListener<RecursoCriadoE
 
         HttpServletResponse response = recursoCriadoEvent.getResponse();
         Long codigo = recursoCriadoEvent.getCodigo();
+        String path = recursoCriadoEvent.getPath();
 
-        response.setHeader("Location", defineUri("/pessoa/listar/", codigo).toASCIIString());
+        response.setHeader("Location", defineUri(path, codigo).toASCIIString());
         response.setStatus(HttpServletResponse.SC_CREATED);
         logger.info("Recurso criado com sucesso");
     }
@@ -40,7 +41,7 @@ public class RecursoCriadoListener implements ApplicationListener<RecursoCriadoE
      */
     private URI defineUri(String path, Long id) {
         if (id != null && id != 0) {
-            return ServletUriComponentsBuilder.fromCurrentContextPath().path(path + id)
+            return ServletUriComponentsBuilder.fromCurrentContextPath().path(path + "{id}")
                     .buildAndExpand(id).toUri();
         }
         return ServletUriComponentsBuilder.fromCurrentContextPath().path(path)

@@ -2,11 +2,11 @@ package com.algaworks.algamoney_api.algamoney_api.dto;
 
 import com.algaworks.algamoney_api.algamoney_api.model.Categoria;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 // Add the new import statement
-import javax.validation.*;
+import jakarta.validation.*;
 
 public class CategoriaDto {
 
@@ -51,38 +51,6 @@ public class CategoriaDto {
 
     public String getDescricao(){
         return this.descricao;
-    }
-
-    /**
-     * Método para converter um objeto CategoriaDto para um objeto Categoria
-     * @return Categoria
-     */
-    public Categoria toCategoria() {
-        return new Categoria.Builder()
-                .nome(this.nome)
-                .descricao(this.descricao)
-                .build();
-    }
-
-    /**
-     * Método para converter um objeto Categoria para um objeto CategoriaDto
-     * @param categoria
-     * @return CategoriaDto
-     */
-    public static CategoriaDto toCategoriaDto(Categoria categoria) {
-        return new CategoriaDto.Builder()
-                .nome(categoria.getNome())
-                .descricao(categoria.getDescricao())
-                .build();
-        }
-
-    /**
-     * Método para converter um Lista de Categoria para um Lista de CategoriaDto
-     * @param List<categoria>
-     * @return List<CategoriaDto>
-     */
-    public static List<CategoriaDto> toCategoriaDtoList(List<Categoria> categoria) {
-        return categoria.stream().map(CategoriaDto::toCategoriaDto).collect(java.util.stream.Collectors.toList());
     }
 
     /*

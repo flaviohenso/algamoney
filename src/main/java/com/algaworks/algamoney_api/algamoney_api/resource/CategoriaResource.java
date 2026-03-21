@@ -3,9 +3,10 @@ package com.algaworks.algamoney_api.algamoney_api.resource;
 import java.net.URI;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.algaworks.algamoney_api.algamoney_api.dto.CategoriaDto;
+import com.algaworks.algamoney_api.algamoney_api.evento.RecursoCriadoEvent;
 import com.algaworks.algamoney_api.algamoney_api.execeptionHandler.ResourceNotFoundException;
+import com.algaworks.algamoney_api.algamoney_api.mapper.CategoriaMapper;
 import com.algaworks.algamoney_api.algamoney_api.model.Categoria;
 import com.algaworks.algamoney_api.algamoney_api.repository.CategoriaRepository;
 
@@ -27,9 +29,13 @@ import com.algaworks.algamoney_api.algamoney_api.repository.CategoriaRepository;
 public class CategoriaResource {
 
     private CategoriaRepository categoriaRepository;
+    private CategoriaMapper categoriaMapper;
+    private ApplicationEventPublisher publisher;
 
-    public CategoriaResource(CategoriaRepository categoriaRepository) {
+    public CategoriaResource(CategoriaRepository categoriaRepository, CategoriaMapper categoriaMapper, ApplicationEventPublisher publisher) {
         this.categoriaRepository = categoriaRepository;
+        this.categoriaMapper = categoriaMapper;
+        this.publisher = publisher;
     }
 
     /**
@@ -38,7 +44,7 @@ public class CategoriaResource {
      */
     @GetMapping(path = "/listar")
     public List<CategoriaDto> listar() {
-        return CategoriaDto.toCategoriaDtoList(categoriaRepository.findAll());
+        return categoriaMapper.toDtoList(categoriaRepository.findAll());
     }
 
     /**
@@ -51,10 +57,7 @@ public class CategoriaResource {
         Categoria categoria = categoriaRepository.findById(codigo)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada para o codigo: " + codigo + "!"));
 
-        return ResponseEntity.ok(new CategoriaDto.Builder()
-                .nome(categoria.getNome())
-                .descricao(categoria.getDescricao())
-                .build());
+        return ResponseEntity.ok(categoriaMapper.toDto(categoria));
     }
 
     /**
@@ -65,11 +68,10 @@ public class CategoriaResource {
      */
     @PostMapping(path = "/criar")
     public ResponseEntity<CategoriaDto> criar(@RequestBody @Valid CategoriaDto categoriaDto , HttpServletResponse response ) {
-        Categoria categoriaSalva = categoriaRepository.save(categoriaDto.toCategoria());
+        Categoria categoriaSalva = categoriaRepository.save(categoriaMapper.toEntity(categoriaDto));
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/categoria/listar/{codigo}")
-                .buildAndExpand(categoriaSalva.getCodigo()).toUri();
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo(), "/categoria/listar/"));
 
-        return ResponseEntity.created(uri).body(categoriaDto);
+        return ResponseEntity.status(201).body(categoriaDto);
     }
 }

@@ -1,6 +1,6 @@
 package com.algaworks.algamoney_api.algamoney_api.model;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import com.algaworks.algamoney_api.algamoney_api.dto.PessoaDto;
 
@@ -112,20 +112,25 @@ public class Pessoa {
     }
 
     /**
-     * Método para converter um objeto Pessoa para um objeto PessoaDto
-     *
-     * @param pessoa
-     * @return
+     * Atualiza os dados da pessoa com base em outra instância de Pessoa (origem).
+     * @param pessoaOrigem Pessoa com os novos dados
      */
-    public PessoaDto toPessoaDto(Pessoa pessoa) {
-        return new PessoaDto.Builder()
-                .nome(pessoa.getNome())
-                .cpf(pessoa.getCpf())
-                .email(pessoa.getEmail())
-                .withTelefone(pessoa.getTelefone())
-                .withAtivo(pessoa.getAtivo())
-                .endereco(pessoa.getEndereco())
-                .build();
+    public void atualizarDados(Pessoa pessoaOrigem) {
+        if (pessoaOrigem.getAtivo() != null) {
+            this.setAtivo(pessoaOrigem.getAtivo());
+        }
+        if (pessoaOrigem.getEmail() != null && !pessoaOrigem.getEmail().isEmpty()) {
+            this.setEmail(pessoaOrigem.getEmail());
+        }
+        if (pessoaOrigem.getTelefone() != null && !pessoaOrigem.getTelefone().isEmpty()) {
+            this.setTelefone(pessoaOrigem.getTelefone());
+        }
+        if (pessoaOrigem.getNome() != null && !pessoaOrigem.getNome().isEmpty()) {
+            this.setNome(pessoaOrigem.getNome());
+        }
+        if (pessoaOrigem.getEndereco() != null) {
+            this.setEndereco(pessoaOrigem.getEndereco());
+        }
     }
 
     @Override

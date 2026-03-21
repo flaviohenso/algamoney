@@ -3,6 +3,7 @@ package com.algaworks.algamoney_api.algamoney_api.service;
 import com.algaworks.algamoney_api.algamoney_api.dto.PessoaUpdateDto;
 import com.algaworks.algamoney_api.algamoney_api.execeptionHandler.ResourceConflictException;
 import com.algaworks.algamoney_api.algamoney_api.execeptionHandler.ResourceNotFoundException;
+import com.algaworks.algamoney_api.algamoney_api.mapper.PessoaMapper;
 import com.algaworks.algamoney_api.algamoney_api.model.Pessoa;
 import com.algaworks.algamoney_api.algamoney_api.repository.PessoaRepository;
 import java.util.List;
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Service;
 public class PessoaService {
 
     private PessoaRepository pessoaRepository;
+    private PessoaMapper pessoaMapper;
 
-    public PessoaService(PessoaRepository pessoaRepository) {
+    public PessoaService(PessoaRepository pessoaRepository, PessoaMapper pessoaMapper) {
         this.pessoaRepository = pessoaRepository;
+        this.pessoaMapper = pessoaMapper;
     }
 
     /**
@@ -36,32 +39,22 @@ public class PessoaService {
      * Método para atualizar uma pessoa
      *
      * @param id
-     * @param pessoa
+     * @param pessoaDto
      * @return
      */
-    public Pessoa atualizar(Long id, PessoaUpdateDto pessoa) {
+    public Pessoa atualizar(Long id, PessoaUpdateDto pessoaDto) {
         Pessoa pessoaSalva = buscarPeloId(id);
-        atualizaPessoa(pessoa, pessoaSalva);
-        return pessoaRepository.save(pessoaSalva);
-    }
 
-    /**
-     * Método para atualizar os atributos de uma pessoa
-     *
-     * @param pessoa
-     * @param pessoaSalva
-     */
-    //TODO: Mover essa lógica para a classe Pessoa
-    private void atualizaPessoa(PessoaUpdateDto pessoa, Pessoa pessoaSalva) {
-        if(pessoa.getAtivo() != null){
-            pessoaSalva.setAtivo(pessoa.getAtivo());
-        }
-        if(pessoa.getEmail() != null && !pessoa.getEmail().isEmpty()){
-            pessoaSalva.setEmail(pessoa.getEmail());
-        }
-        if(pessoa.getTelefone() != null && !pessoa.getTelefone().isEmpty()){
-            pessoaSalva.setTelefone(pessoa.getTelefone());
-        }
+        // Convertemos o DTO de atualização em uma entidade temporária para usar o método de domínio
+        Pessoa pessoaNovosDados = new Pessoa.Builder()
+            .withAtivo(pessoaDto.getAtivo())
+            .email(pessoaDto.getEmail())
+            .withTelefone(pessoaDto.getTelefone())
+            .build();
+
+        pessoaSalva.atualizarDados(pessoaNovosDados);
+
+        return pessoaRepository.save(pessoaSalva);
     }
 
     /**
@@ -95,7 +88,6 @@ public class PessoaService {
      * Método para validar se a pessoa já existe
      * @param pessoa
      */
-    //TODO: Mover essa validaão para a classe Pessoa
     public void validarPessoaInsert(Pessoa pessoa) {
         Pessoa pessoaSalva = pessoaRepository.findByCpf(pessoa.getCpf());
         if (pessoaSalva != null && !pessoaSalva.equals(pessoa)) {
